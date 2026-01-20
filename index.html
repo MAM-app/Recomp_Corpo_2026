@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InBody Elite Dashboard - Maximiliano Arechiga-M</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --card: #12151c;
+            --border: #232830;
+            --accent: #22d3ee;
+            --success: #a3e635;
+            --danger: #f43f5e;
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg); 
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        .glass {
+            background: rgba(18, 21, 28, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(34, 211, 238, 0.2);
+        }
+        .chart-container { position: relative; height: 320px; width: 100%; }
+        
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+
+        details summary::-webkit-details-marker { display: none; }
+        details > summary { list-style: none; outline: none; cursor: pointer; }
+    </style>
+</head>
+<body class="p-4 sm:p-10">
+
+    <!-- HEADER TOP -->
+    <header class="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fade-in">
+        <div>
+            <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-1 rounded bg-cyan-500/10 text-cyan-400 text-xs font-bold tracking-widest uppercase">Elite Performance Profile</span>
+                <span class="text-gray-500 text-xs">Versión 2.1</span>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Maximiliano</span> Arechiga-M
+            </h1>
+            <p class="text-gray-400 mt-1 font-medium">Análisis de Composición Corporal & Performance</p>
+        </div>
+        <div class="text-right">
+            <p class="text-gray-400 text-sm italic">Última medición</p>
+            <p class="text-xl font-mono font-bold text-white tracking-widest">17.ENE.2026</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto space-y-8">
+        
+        <!-- GRID DE KPI PRINCIPALES -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-6 animate-fade-in" style="animation-delay: 0.1s">
+            <div class="glass p-6 rounded-3xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L4 9v11a2 2 0 002 2h12a2 2 0 002-2V9l-8-6z"/></svg>
+                </div>
+                <p class="text-gray-400 text-sm font-semibold mb-1">Peso Total</p>
+                <p class="text-4xl font-extrabold text-white">68.2 <span class="text-lg font-normal text-gray-500">kg</span></p>
+                <div class="mt-2 flex items-center text-xs text-red-400 font-medium">
+                    <span>Tendencia: +0.9kg</span>
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-3xl relative overflow-hidden group">
+                <p class="text-gray-400 text-sm font-semibold mb-1">MME (Músculo)</p>
+                <p class="text-4xl font-extrabold text-success">28.6 <span class="text-lg font-normal text-gray-500">kg</span></p>
+                <div class="mt-2 flex items-center text-xs text-emerald-400 font-medium">
+                    <span>Mantenimiento Óptimo</span>
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-3xl relative overflow-hidden group">
+                <p class="text-gray-400 text-sm font-semibold mb-1">Grasa Corporal</p>
+                <p class="text-4xl font-extrabold text-red-400">25.9 <span class="text-lg font-normal text-gray-500">%</span></p>
+                <div class="mt-2 flex items-center text-xs text-red-400 font-medium">
+                    <span>A vigilar (Nivel 25.9)</span>
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-3xl border-cyan-500/30 bg-cyan-500/5">
+                <p class="text-cyan-400 text-sm font-semibold mb-1">Puntuación InBody</p>
+                <p class="text-4xl font-extrabold text-white">71 <span class="text-lg font-normal text-gray-500">/100</span></p>
+                <div class="mt-2 w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-cyan-400 h-full w-[71%]"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE TIEMPO Y RUTINA -->
+        <section class="glass p-8 rounded-3xl animate-fade-in" style="animation-delay: 0.2s">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        ⏱️ Estrategia de Tiempo & Rutina
+                    </h2>
+                    <p class="text-gray-400">Objetivo: Reducción de 8.7kg de masa grasa.</p>
+                </div>
+                <div class="flex bg-gray-800/50 p-1 rounded-xl">
+                    <button id="btnSost" onclick="switchPlan('sost')" class="px-4 py-2 rounded-lg text-sm font-bold transition-all bg-yellow-500 text-black shadow-lg shadow-yellow-500/20">Sostenible</button>
+                    <button id="btnEnf" onclick="switchPlan('enf')" class="px-4 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white">Elite/Enfocado</button>
+                </div>
+            </div>
+
+            <div id="planSost" class="tab-content active grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-6">
+                    <div class="flex justify-between items-end">
+                        <span class="text-5xl font-black text-white">17.5 <span class="text-xl text-gray-500 font-medium uppercase">Semanas</span></span>
+                        <span class="text-yellow-500 font-bold">~0.5 kg / semana</span>
+                    </div>
+                    <div class="relative pt-1">
+                        <div class="flex mb-2 items-center justify-between">
+                            <div class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-yellow-500 bg-yellow-500/10">Ritmo Seguro</div>
+                            <div class="text-right"><span class="text-xs font-semibold inline-block text-yellow-500">Protección Muscular Max.</span></div>
+                        </div>
+                        <div class="overflow-hidden h-3 text-xs flex rounded-full bg-gray-800">
+                            <div style="width:25%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-yellow-500"></div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Maximiliano, con la rutina **Athlean-X**, este ritmo es ideal para asegurar que los 28.6kg de músculo se queden contigo. Al final de este proceso, tu definición muscular será notablemente superior.
+                    </p>
+                </div>
+                <div class="bg-gray-900/40 p-6 rounded-2xl border border-gray-800">
+                    <h4 class="text-white font-bold mb-4 flex items-center gap-2">
+                        🚀 Meta Cumplida
+                    </h4>
+                    <p class="text-3xl font-mono font-bold text-white">20 MAYO</p>
+                    <p class="text-cyan-400 font-bold italic text-sm">PROYECCIÓN 2026</p>
+                    <hr class="my-4 border-gray-800">
+                    <p class="text-xs text-gray-500">Déficit calórico diario:</p>
+                    <p class="text-xl font-bold text-white">550 <span class="text-sm font-normal">kcal</span></p>
+                </div>
+            </div>
+
+            <div id="planEnf" class="tab-content grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-6">
+                    <div class="flex justify-between items-end">
+                        <span class="text-5xl font-black text-white">12.5 <span class="text-xl text-gray-500 font-medium uppercase">Semanas</span></span>
+                        <span class="text-cyan-400 font-bold">~0.7 kg / semana</span>
+                    </div>
+                    <div class="relative pt-1">
+                        <div class="flex mb-2 items-center justify-between">
+                            <div class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-cyan-400 bg-cyan-400/10">Ritmo Elite</div>
+                            <div class="text-right"><span class="text-xs font-semibold inline-block text-cyan-400">Exigencia Athlean-X</span></div>
+                        </div>
+                        <div class="overflow-hidden h-3 text-xs flex rounded-full bg-gray-800">
+                            <div style="width:10%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-cyan-400"></div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Este ritmo requiere una disciplina estricta en la alimentación para acompañar los 5 días de entrenamiento. Es la vía rápida hacia el objetivo de 8.9kg de masa grasa total.
+                    </p>
+                </div>
+                <div class="bg-gray-900/40 p-6 rounded-2xl border border-gray-800">
+                    <h4 class="text-white font-bold mb-4 flex items-center gap-2">
+                        🎯 Meta Cumplida
+                    </h4>
+                    <p class="text-3xl font-mono font-bold text-white">15 ABRIL</p>
+                    <p class="text-cyan-400 font-bold italic text-sm">PROYECCIÓN 2026</p>
+                    <hr class="my-4 border-gray-800">
+                    <p class="text-xs text-gray-500">Déficit calórico diario:</p>
+                    <p class="text-xl font-bold text-white">770 <span class="text-sm font-normal">kcal</span></p>
+                </div>
+            </div>
+
+            <details class="mt-8 border-t border-gray-800 pt-6 group">
+                <summary class="flex justify-between items-center text-gray-500 hover:text-cyan-400 transition-colors">
+                    <span class="font-bold text-sm tracking-widest uppercase">Cálculo Energético Detallado</span>
+                    <svg class="w-5 h-5 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </summary>
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-400 bg-black/20 p-4 rounded-xl">
+                    <div class="space-y-2">
+                        <p class="uppercase text-[10px] font-bold tracking-tighter text-gray-500">Ecuación de Pérdida</p>
+                        <p class="font-mono text-cyan-300">8.7kg Grasa × 7,700 kcal/kg = 66,990 kcal</p>
+                        <p>Para llegar a la fecha objetivo, debemos dividir este total entre los días restantes.</p>
+                    </div>
+                    <div>
+                        <p class="uppercase text-[10px] font-bold tracking-tighter text-gray-500">Factor Rutina</p>
+                        <p>Tu rutina actual incrementa el gasto basal. El déficit no es solo comer menos, sino "quemar más" mientras mantienes la intensidad en pesas.</p>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- DASHBOARD DE GRÁFICOS -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in" style="animation-delay: 0.3s">
+            
+            <div class="glass p-8 rounded-3xl">
+                <h3 class="text-xl font-bold text-white mb-6">Trayectoria Histórica</h3>
+                <div class="chart-container">
+                    <canvas id="historicalChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass p-8 rounded-3xl">
+                <h3 class="text-xl font-bold text-white mb-6">Músculo Segmental (%)</h3>
+                <div class="chart-container">
+                    <canvas id="muscleSegmentalChart"></canvas>
+                </div>
+                <div class="mt-4 flex items-center gap-2 p-4 bg-red-400/10 rounded-2xl border border-red-400/20">
+                    <div class="bg-red-500 rounded-full p-1">
+                        <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                    </div>
+                    <p class="text-xs text-red-200 font-medium">Prioridad Piernas: Ambas piernas están bajo el ideal. Sugerencia: Día extra de enfoque en Cuádriceps/Isquios.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="glass p-8 rounded-3xl animate-fade-in" style="animation-delay: 0.4s">
+            <h3 class="text-xl font-bold text-white mb-6">Focalización de Grasa (kg)</h3>
+            <div class="chart-container" style="height: 250px;">
+                <canvas id="fatSegmentalChart"></canvas>
+            </div>
+            <p class="text-center text-xs text-gray-500 mt-6 font-medium italic">Maximiliano, el 55% de tu grasa se concentra en el tronco (9.7kg). El déficit sostenido es la única vía para reducir esta área.</p>
+        </section>
+
+    </main>
+
+    <script>
+        const data = {
+            history: [
+                { date: 'SEP 21', peso: 66.1, mme: 27.9 },
+                { date: 'FEB 25', peso: 69.4, mme: 28.7 },
+                { date: 'MAY 25', peso: 67.4, mme: 28.5 },
+                { date: 'OCT 25', peso: 67.5, mme: 28.6 },
+                { date: 'DIC 25', peso: 67.3, mme: 28.6 },
+                { date: 'ENE 26', peso: 68.2, mme: 28.6 }
+            ],
+            segments: {
+                labels: ['Brazo D', 'Brazo I', 'Tronco', 'Pierna D', 'Pierna I'],
+                muscle: [108.6, 106.0, 104.3, 86.1, 87.7],
+                fat: [1.0, 1.0, 9.7, 2.4, 2.4]
+            }
+        };
+
+        function switchPlan(type) {
+            const btnSost = document.getElementById('btnSost');
+            const btnEnf = document.getElementById('btnEnf');
+            const planSost = document.getElementById('planSost');
+            const planEnf = document.getElementById('planEnf');
+
+            if(type === 'sost') {
+                btnSost.className = 'px-4 py-2 rounded-lg text-sm font-bold transition-all bg-yellow-500 text-black shadow-lg shadow-yellow-500/20';
+                btnEnf.className = 'px-4 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white';
+                planSost.classList.add('active');
+                planEnf.classList.remove('active');
+            } else {
+                btnEnf.className = 'px-4 py-2 rounded-lg text-sm font-bold transition-all bg-cyan-400 text-black shadow-lg shadow-cyan-500/20';
+                btnSost.className = 'px-4 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white';
+                planEnf.classList.add('active');
+                planSost.classList.remove('active');
+            }
+        }
+
+        function init() {
+            const ctxHist = document.getElementById('historicalChart').getContext('2d');
+            const gradCyan = ctxHist.createLinearGradient(0, 0, 0, 400);
+            gradCyan.addColorStop(0, 'rgba(34, 211, 238, 0.4)');
+            gradCyan.addColorStop(1, 'transparent');
+
+            new Chart(ctxHist, {
+                type: 'line',
+                data: {
+                    labels: data.history.map(d => d.date),
+                    datasets: [
+                        {
+                            label: 'Masa Muscular (kg)',
+                            data: data.history.map(d => d.mme),
+                            borderColor: '#a3e635',
+                            borderWidth: 4,
+                            pointBackgroundColor: '#a3e635',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Peso Total (kg)',
+                            data: data.history.map(d => d.peso),
+                            borderColor: '#22d3ee',
+                            backgroundColor: gradCyan,
+                            fill: true,
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: '#232830' }, ticks: { color: '#64748b' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b' } }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('muscleSegmentalChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.segments.labels,
+                    datasets: [{
+                        data: data.segments.muscle,
+                        backgroundColor: data.segments.muscle.map(v => v < 100 ? '#f43f5e' : '#10b981'),
+                        borderRadius: 8,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        annotation: { annotations: { line100: { type: 'line', xMin: 100, xMax: 100, borderColor: 'white', borderDash: [4, 4], borderWidth: 1 } } }
+                    },
+                    scales: {
+                        x: { min: 60, max: 120, grid: { color: '#232830' }, ticks: { color: '#64748b' } },
+                        y: { grid: { display: false }, ticks: { color: '#e2e8f0', font: { weight: '600' } } }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('fatSegmentalChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.segments.labels,
+                    datasets: [{
+                        label: 'Grasa (kg)',
+                        data: data.segments.fat,
+                        backgroundColor: '#f87171',
+                        borderRadius: 20,
+                        barThickness: 12
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: '#232830' }, ticks: { color: '#64748b' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b' } }
+                    }
+                }
+            });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
