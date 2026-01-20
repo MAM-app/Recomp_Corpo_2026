@@ -36,7 +36,6 @@
         }
         .chart-container { position: relative; height: 320px; width: 100%; }
         
-        /* Animaciones */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -48,23 +47,53 @@
 
         details summary::-webkit-details-marker { display: none; }
         details > summary { list-style: none; outline: none; cursor: pointer; }
+
+        .badge-training {
+            background: linear-gradient(90deg, #22d3ee, #06b6d4);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body class="p-4 sm:p-10">
 
     <!-- HEADER TOP -->
-    <header class="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 animate-fade-in">
-        <div>
-            <div class="flex items-center gap-2 mb-2">
-                <span class="px-2 py-1 rounded bg-cyan-500/10 text-cyan-400 text-xs font-bold tracking-widest uppercase">Elite Performance Profile</span>
-                <span class="text-gray-500 text-xs">Versión 2.1</span>
+    <header class="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 animate-fade-in">
+        <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="px-2 py-1 rounded bg-cyan-500/10 text-cyan-400 text-xs font-bold tracking-widest uppercase">Performance Profile</span>
+                <div class="badge-training italic">6 Días / Sem - Rutina MAM Activa</div>
             </div>
             <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Maximiliano</span> Arechiga-M
             </h1>
             <p class="text-gray-400 mt-1 font-medium">Análisis de Composición Corporal & Performance</p>
         </div>
-        <div class="text-right">
+        
+        <!-- BOTÓN ACCESO RUTINA -->
+        <a href="https://marechiga-lab.github.io/Rutina_MAM/" target="_blank" class="cta-button group p-[1px] rounded-2xl flex items-center justify-center">
+            <div class="bg-gray-950/20 group-hover:bg-transparent px-6 py-3 rounded-[15px] flex items-center gap-3 text-white font-bold transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                <span>Ver Rutina MAM</span>
+            </div>
+        </a>
+
+        <div class="text-right hidden md:block border-l border-gray-800 pl-6">
             <p class="text-gray-400 text-sm italic">Última medición</p>
             <p class="text-xl font-mono font-bold text-white tracking-widest">17.ENE.2026</p>
         </div>
@@ -75,21 +104,18 @@
         <!-- GRID DE KPI PRINCIPALES -->
         <section class="grid grid-cols-1 md:grid-cols-4 gap-6 animate-fade-in" style="animation-delay: 0.1s">
             <div class="glass p-6 rounded-3xl relative overflow-hidden group">
-                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L4 9v11a2 2 0 002 2h12a2 2 0 002-2V9l-8-6z"/></svg>
-                </div>
                 <p class="text-gray-400 text-sm font-semibold mb-1">Peso Total</p>
                 <p class="text-4xl font-extrabold text-white">68.2 <span class="text-lg font-normal text-gray-500">kg</span></p>
                 <div class="mt-2 flex items-center text-xs text-red-400 font-medium">
-                    <span>Tendencia: +0.9kg</span>
+                    <span>Tendencia: +0.9kg vs Dic</span>
                 </div>
             </div>
 
             <div class="glass p-6 rounded-3xl relative overflow-hidden group">
                 <p class="text-gray-400 text-sm font-semibold mb-1">MME (Músculo)</p>
                 <p class="text-4xl font-extrabold text-success">28.6 <span class="text-lg font-normal text-gray-500">kg</span></p>
-                <div class="mt-2 flex items-center text-xs text-emerald-400 font-medium">
-                    <span>Mantenimiento Óptimo</span>
+                <div class="mt-2 flex items-center text-xs text-emerald-400 font-medium font-mono">
+                    <span>ESTADO: HIPERTROFIA</span>
                 </div>
             </div>
 
@@ -97,110 +123,112 @@
                 <p class="text-gray-400 text-sm font-semibold mb-1">Grasa Corporal</p>
                 <p class="text-4xl font-extrabold text-red-400">25.9 <span class="text-lg font-normal text-gray-500">%</span></p>
                 <div class="mt-2 flex items-center text-xs text-red-400 font-medium">
-                    <span>A vigilar (Nivel 25.9)</span>
+                    <span>17.7 kg de masa grasa</span>
                 </div>
             </div>
 
             <div class="glass p-6 rounded-3xl border-cyan-500/30 bg-cyan-500/5">
-                <p class="text-cyan-400 text-sm font-semibold mb-1">Puntuación InBody</p>
-                <p class="text-4xl font-extrabold text-white">71 <span class="text-lg font-normal text-gray-500">/100</span></p>
-                <div class="mt-2 w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
-                    <div class="bg-cyan-400 h-full w-[71%]"></div>
+                <p class="text-cyan-400 text-sm font-semibold mb-1">Metabolismo Basal</p>
+                <p class="text-4xl font-extrabold text-white">1,540 <span class="text-lg font-normal text-gray-500">kcal</span></p>
+                <div class="mt-2 flex items-center text-[10px] text-gray-500 uppercase font-bold tracking-tighter">
+                    <span>Base sin ejercicio</span>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN DE TIEMPO Y RUTINA -->
+        <!-- SECCIÓN DE TIEMPO Y RUTINA (RECALCULADA) -->
         <section class="glass p-8 rounded-3xl animate-fade-in" style="animation-delay: 0.2s">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                        ⏱️ Estrategia de Tiempo & Rutina
+                        📅 Cronograma con Rutina MAM (6d/sem)
                     </h2>
-                    <p class="text-gray-400">Objetivo: Reducción de 8.7kg de masa grasa.</p>
+                    <p class="text-gray-400">Ajustado por frecuencia de entrenamiento elevada.</p>
                 </div>
-                <div class="flex bg-gray-800/50 p-1 rounded-xl">
-                    <button id="btnSost" onclick="switchPlan('sost')" class="px-4 py-2 rounded-lg text-sm font-bold transition-all bg-yellow-500 text-black shadow-lg shadow-yellow-500/20">Sostenible</button>
-                    <button id="btnEnf" onclick="switchPlan('enf')" class="px-4 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white">Elite/Enfocado</button>
+                <div class="flex bg-gray-800/50 p-1 rounded-xl border border-white/5">
+                    <button id="btnEnf" onclick="switchPlan('enf')" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-cyan-400 text-black shadow-lg shadow-cyan-500/20">Modo Atleta (Recomendado)</button>
+                    <button id="btnSost" onclick="switchPlan('sost')" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white">Modo Estándar</button>
                 </div>
             </div>
 
-            <div id="planSost" class="tab-content active grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div id="planEnf" class="tab-content active grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="md:col-span-2 space-y-6">
                     <div class="flex justify-between items-end">
-                        <span class="text-5xl font-black text-white">17.5 <span class="text-xl text-gray-500 font-medium uppercase">Semanas</span></span>
-                        <span class="text-yellow-500 font-bold">~0.5 kg / semana</span>
+                        <span class="text-5xl font-black text-white">11.0 <span class="text-xl text-gray-500 font-medium uppercase">Semanas</span></span>
+                        <span class="text-cyan-400 font-bold">~0.8 kg / semana</span>
                     </div>
                     <div class="relative pt-1">
                         <div class="flex mb-2 items-center justify-between">
-                            <div class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-yellow-500 bg-yellow-500/10">Ritmo Seguro</div>
-                            <div class="text-right"><span class="text-xs font-semibold inline-block text-yellow-500">Protección Muscular Max.</span></div>
+                            <div class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-cyan-400 bg-cyan-400/10">Máxima Eficiencia</div>
+                            <div class="text-right"><span class="text-xs font-semibold inline-block text-cyan-400">Rutina MAM 6/7</span></div>
                         </div>
                         <div class="overflow-hidden h-3 text-xs flex rounded-full bg-gray-800">
-                            <div style="width:25%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-yellow-500"></div>
+                            <div style="width:15%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-cyan-400"></div>
                         </div>
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        Maximiliano, con la rutina **Athlean-X**, este ritmo es ideal para asegurar que los 28.6kg de músculo se queden contigo. Al final de este proceso, tu definición muscular será notablemente superior.
+                        Maximiliano, al entrenar 6 días a la semana según tu plan en GitHub, tu gasto calórico total sube a aprox. **2,500 - 2,700 kcal**. Esto te permite un déficit de 800 kcal diarias comiendo bien (aprox 1,800 kcal), lo cual acelera la pérdida sin sacrificar músculo.
+                    </p>
+                </div>
+                <div class="bg-cyan-500/5 p-6 rounded-2xl border border-cyan-500/20 relative">
+                    <div class="absolute -top-3 -right-3 bg-cyan-400 text-black text-[10px] font-black px-2 py-1 rounded shadow-xl">ACTUALIZADO</div>
+                    <h4 class="text-white font-bold mb-4 flex items-center gap-2">
+                        🎯 Meta InBody
+                    </h4>
+                    <p class="text-3xl font-mono font-bold text-white uppercase">04 ABRIL</p>
+                    <p class="text-cyan-400 font-bold italic text-sm">FINAL DE TRANSFORMACIÓN</p>
+                    <hr class="my-4 border-gray-800">
+                    <div class="flex justify-between text-xs text-gray-400">
+                        <span>Gasto diario est.</span>
+                        <span class="text-white font-bold">~2,650 kcal</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="planSost" class="tab-content grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-6">
+                    <div class="flex justify-between items-end">
+                        <span class="text-5xl font-black text-white">15.0 <span class="text-xl text-gray-500 font-medium uppercase">Semanas</span></span>
+                        <span class="text-yellow-500 font-bold">~0.6 kg / semana</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Un enfoque más conservador. Útil si la fatiga de los 6 días de entrenamiento empieza a afectar tu rendimiento. En este modo, priorizamos la recuperación total.
                     </p>
                 </div>
                 <div class="bg-gray-900/40 p-6 rounded-2xl border border-gray-800">
                     <h4 class="text-white font-bold mb-4 flex items-center gap-2">
                         🚀 Meta Cumplida
                     </h4>
-                    <p class="text-3xl font-mono font-bold text-white">20 MAYO</p>
-                    <p class="text-cyan-400 font-bold italic text-sm">PROYECCIÓN 2026</p>
+                    <p class="text-3xl font-mono font-bold text-white uppercase">02 MAYO</p>
+                    <p class="text-yellow-500 font-bold italic text-sm">ENFOQUE SOSTENIBLE</p>
                     <hr class="my-4 border-gray-800">
-                    <p class="text-xs text-gray-500">Déficit calórico diario:</p>
-                    <p class="text-xl font-bold text-white">550 <span class="text-sm font-normal">kcal</span></p>
-                </div>
-            </div>
-
-            <div id="planEnf" class="tab-content grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="md:col-span-2 space-y-6">
-                    <div class="flex justify-between items-end">
-                        <span class="text-5xl font-black text-white">12.5 <span class="text-xl text-gray-500 font-medium uppercase">Semanas</span></span>
-                        <span class="text-cyan-400 font-bold">~0.7 kg / semana</span>
-                    </div>
-                    <div class="relative pt-1">
-                        <div class="flex mb-2 items-center justify-between">
-                            <div class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-cyan-400 bg-cyan-400/10">Ritmo Elite</div>
-                            <div class="text-right"><span class="text-xs font-semibold inline-block text-cyan-400">Exigencia Athlean-X</span></div>
-                        </div>
-                        <div class="overflow-hidden h-3 text-xs flex rounded-full bg-gray-800">
-                            <div style="width:10%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-cyan-400"></div>
-                        </div>
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Este ritmo requiere una disciplina estricta en la alimentación para acompañar los 5 días de entrenamiento. Es la vía rápida hacia el objetivo de 8.9kg de masa grasa total.
-                    </p>
-                </div>
-                <div class="bg-gray-900/40 p-6 rounded-2xl border border-gray-800">
-                    <h4 class="text-white font-bold mb-4 flex items-center gap-2">
-                        🎯 Meta Cumplida
-                    </h4>
-                    <p class="text-3xl font-mono font-bold text-white">15 ABRIL</p>
-                    <p class="text-cyan-400 font-bold italic text-sm">PROYECCIÓN 2026</p>
-                    <hr class="my-4 border-gray-800">
-                    <p class="text-xs text-gray-500">Déficit calórico diario:</p>
-                    <p class="text-xl font-bold text-white">770 <span class="text-sm font-normal">kcal</span></p>
+                    <p class="text-xs text-gray-500">Déficit calórico moderado:</p>
+                    <p class="text-xl font-bold text-white">600 <span class="text-sm font-normal">kcal</span></p>
                 </div>
             </div>
 
             <details class="mt-8 border-t border-gray-800 pt-6 group">
                 <summary class="flex justify-between items-center text-gray-500 hover:text-cyan-400 transition-colors">
-                    <span class="font-bold text-sm tracking-widest uppercase">Cálculo Energético Detallado</span>
+                    <span class="font-bold text-sm tracking-widest uppercase italic font-mono">Ver Desglose de Energía (6 Días/Sem)</span>
                     <svg class="w-5 h-5 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </summary>
-                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-400 bg-black/20 p-4 rounded-xl">
-                    <div class="space-y-2">
-                        <p class="uppercase text-[10px] font-bold tracking-tighter text-gray-500">Ecuación de Pérdida</p>
-                        <p class="font-mono text-cyan-300">8.7kg Grasa × 7,700 kcal/kg = 66,990 kcal</p>
-                        <p>Para llegar a la fecha objetivo, debemos dividir este total entre los días restantes.</p>
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-300 bg-black/40 p-6 rounded-2xl border border-white/5">
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-cyan-400 font-bold mb-1">Gasto Energético (TDEE)</p>
+                            <ul class="list-disc list-inside space-y-1 text-xs text-gray-400">
+                                <li>Basal (BMR): 1,540 kcal</li>
+                                <li>NEAT (Actividad Diaria): ~400 kcal</li>
+                                <li>Rutina MAM (Alta Frecuencia): ~600-700 kcal</li>
+                                <li class="text-white border-t border-gray-800 mt-2 pt-1 font-bold">TOTAL ESTIMADO: 2,640 kcal/día</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div>
-                        <p class="uppercase text-[10px] font-bold tracking-tighter text-gray-500">Factor Rutina</p>
-                        <p>Tu rutina actual incrementa el gasto basal. El déficit no es solo comer menos, sino "quemar más" mientras mantienes la intensidad en pesas.</p>
+                    <div class="bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20">
+                        <p class="text-emerald-400 font-bold mb-2">Protección de MME (28.6kg)</p>
+                        <p class="text-xs leading-relaxed">
+                            Al entrenar 6 días, tu cuerpo demanda aminoácidos constantemente. Mantén tu ingesta de proteína en **1.8g - 2.2g por kg de peso** para asegurar que la pérdida sea 100% grasa y 0% músculo.
+                        </p>
                     </div>
                 </div>
             </details>
@@ -210,33 +238,35 @@
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in" style="animation-delay: 0.3s">
             
             <div class="glass p-8 rounded-3xl">
-                <h3 class="text-xl font-bold text-white mb-6">Trayectoria Histórica</h3>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-white">Evolución Histórica</h3>
+                    <span class="text-[10px] text-gray-500 font-mono tracking-widest">Últimos 6 Reportes</span>
+                </div>
                 <div class="chart-container">
                     <canvas id="historicalChart"></canvas>
                 </div>
             </div>
 
             <div class="glass p-8 rounded-3xl">
-                <h3 class="text-xl font-bold text-white mb-6">Músculo Segmental (%)</h3>
+                <h3 class="text-xl font-bold text-white mb-6">Balance Muscular (Segmental)</h3>
                 <div class="chart-container">
                     <canvas id="muscleSegmentalChart"></canvas>
                 </div>
-                <div class="mt-4 flex items-center gap-2 p-4 bg-red-400/10 rounded-2xl border border-red-400/20">
-                    <div class="bg-red-500 rounded-full p-1">
-                        <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                    </div>
-                    <p class="text-xs text-red-200 font-medium">Prioridad Piernas: Ambas piernas están bajo el ideal. Sugerencia: Día extra de enfoque en Cuádriceps/Isquios.</p>
+                <div class="mt-4 p-4 bg-yellow-500/10 rounded-2xl border border-yellow-500/20">
+                    <p class="text-xs text-yellow-200 font-medium">
+                        ⚠️ **Nota de Rutina:** Tu plan MAM debe enfatizar el día de **Pierna** ya que el InBody muestra que están al 86-87% del ideal, mientras que el tren superior está por encima del 100%.
+                    </p>
                 </div>
             </div>
 
         </section>
 
         <section class="glass p-8 rounded-3xl animate-fade-in" style="animation-delay: 0.4s">
-            <h3 class="text-xl font-bold text-white mb-6">Focalización de Grasa (kg)</h3>
+            <h3 class="text-xl font-bold text-white mb-6">Localización de Grasa (kg)</h3>
             <div class="chart-container" style="height: 250px;">
                 <canvas id="fatSegmentalChart"></canvas>
             </div>
-            <p class="text-center text-xs text-gray-500 mt-6 font-medium italic">Maximiliano, el 55% de tu grasa se concentra en el tronco (9.7kg). El déficit sostenido es la única vía para reducir esta área.</p>
+            <p class="text-center text-xs text-gray-500 mt-6 font-medium italic">Maximiliano, el objetivo es bajar esos 9.7kg del tronco mediante el déficit calórico sostenido por la Rutina MAM.</p>
         </section>
 
     </main>
@@ -265,13 +295,13 @@
             const planEnf = document.getElementById('planEnf');
 
             if(type === 'sost') {
-                btnSost.className = 'px-4 py-2 rounded-lg text-sm font-bold transition-all bg-yellow-500 text-black shadow-lg shadow-yellow-500/20';
-                btnEnf.className = 'px-4 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white';
+                btnSost.className = 'px-6 py-2 rounded-lg text-sm font-bold transition-all bg-yellow-500 text-black shadow-lg shadow-yellow-500/20';
+                btnEnf.className = 'px-6 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white';
                 planSost.classList.add('active');
                 planEnf.classList.remove('active');
             } else {
-                btnEnf.className = 'px-4 py-2 rounded-lg text-sm font-bold transition-all bg-cyan-400 text-black shadow-lg shadow-cyan-500/20';
-                btnSost.className = 'px-4 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white';
+                btnEnf.className = 'px-6 py-2 rounded-lg text-sm font-bold transition-all bg-cyan-400 text-black shadow-lg shadow-cyan-500/20';
+                btnSost.className = 'px-6 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white';
                 planEnf.classList.add('active');
                 planSost.classList.remove('active');
             }
@@ -294,6 +324,7 @@
                             borderColor: '#a3e635',
                             borderWidth: 4,
                             pointBackgroundColor: '#a3e635',
+                            pointRadius: 4,
                             tension: 0.4
                         },
                         {
@@ -373,3 +404,4 @@
     </script>
 </body>
 </html>
+
