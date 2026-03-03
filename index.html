@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InBody Elite Dashboard - Maximiliano Arechiga-M</title>
+    <title>InBody Elite Dashboard - Análisis de Estrategia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,200 +14,170 @@
             --border: #232830;
             --accent: #22d3ee;
             --success: #a3e635;
-            --danger: #f43f5e;
+            --warning: #fbbf24;
         }
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background-color: var(--bg); 
             color: #e2e8f0;
-            overflow-x: hidden;
         }
         .glass {
             background: rgba(18, 21, 28, 0.7);
             backdrop-filter: blur(12px);
             border: 1px solid var(--border);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px -10px rgba(34, 211, 238, 0.2);
+            transition: all 0.3s ease;
         }
         .chart-container { position: relative; height: 320px; width: 100%; }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        
-        /* Control estricto de visibilidad */
         .plan-card { display: none !important; }
-        .plan-card.active { display: grid !important; animation: fadeIn 0.3s ease-out forwards; }
+        .plan-card.active { display: grid !important; animation: fadeIn 0.4s ease-out forwards; }
 
-        .badge-training {
-            background: linear-gradient(90deg, #22d3ee, #06b6d4);
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .cta-button {
-            background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);
-            transition: all 0.3s ease;
+        .badge-real {
+            background: rgba(34, 211, 238, 0.1);
+            color: #22d3ee;
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(34, 211, 238, 0.3);
         }
     </style>
 </head>
 <body class="p-4 sm:p-10">
 
     <!-- HEADER -->
-    <header class="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 animate-fade-in">
+    <header class="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
-                <span class="px-2 py-1 rounded bg-cyan-500/10 text-cyan-400 text-xs font-bold tracking-widest uppercase">Performance Profile</span>
-                <div class="badge-training italic">6 Días / Sem - Rutina MAM Activa</div>
+                <span class="badge-real">ANÁLISIS DE ESTRATEGIA</span>
+                <span class="text-gray-500 text-xs font-bold uppercase tracking-widest">Medición Actual: 14 Feb 2026</span>
             </div>
-            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Maximiliano</span> Arechiga-M
-            </h1>
-            <p class="text-gray-400 mt-1 font-medium italic">Referencia: InBody (164 cm)</p>
+            <h1 class="text-4xl font-extrabold text-white">Evolución <span class="text-cyan-400">MAM</span></h1>
+            <p class="text-gray-400 mt-1">Comparativa de ritmos basada en datos reales de febrero.</p>
         </div>
-        
-        <a href="https://marechiga-lab.github.io/Rutina_MAM/" target="_blank" class="cta-button group p-[1px] rounded-2xl flex items-center justify-center">
-            <div class="bg-gray-950/20 group-hover:bg-transparent px-6 py-3 rounded-[15px] flex items-center gap-3 text-white font-bold transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-                <span>Ver Rutina MAM</span>
-            </div>
-        </a>
+        <div class="flex bg-gray-900/80 p-1.5 rounded-2xl border border-white/5">
+            <button id="btnAtleta" onclick="switchPlan('atleta')" class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-cyan-400 text-black shadow-lg shadow-cyan-500/20">Modo Atleta</button>
+            <button id="btnSostenible" onclick="switchPlan('sostenible')" class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">Sostenible</button>
+        </div>
     </header>
 
     <main class="max-w-6xl mx-auto space-y-8">
         
-        <!-- KPI ACTUALES -->
+        <!-- KPIs ACTUALES -->
         <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="glass p-6 rounded-3xl">
-                <p class="text-gray-400 text-sm font-semibold mb-1">Peso Total</p>
-                <p class="text-4xl font-extrabold text-white">68.2 <span class="text-lg font-normal text-gray-500">kg</span></p>
-                <div class="mt-2 text-xs text-red-400 font-medium tracking-wider">17.ENE.2026</div>
+                <p class="text-gray-400 text-sm font-semibold mb-1">Peso</p>
+                <p class="text-3xl font-black text-white">67.5 <span class="text-lg font-normal text-gray-500">kg</span></p>
+                <div class="mt-2 text-xs text-emerald-400">↓ 0.7kg vs Enero</div>
             </div>
-
             <div class="glass p-6 rounded-3xl">
-                <p class="text-gray-400 text-sm font-semibold mb-1">MME (Músculo)</p>
-                <p class="text-4xl font-extrabold text-success">28.6 <span class="text-lg font-normal text-gray-500">kg</span></p>
-                <div class="mt-2 text-xs text-emerald-400 font-medium font-mono">STATUS: ESTABLE</div>
+                <p class="text-gray-400 text-sm font-semibold mb-1">MME</p>
+                <p class="text-3xl font-black text-success">28.4 <span class="text-lg font-normal text-gray-500">kg</span></p>
+                <div class="mt-2 text-xs text-gray-500 uppercase font-bold tracking-tighter">Músculo Protegido</div>
             </div>
-
             <div class="glass p-6 rounded-3xl">
-                <p class="text-gray-400 text-sm font-semibold mb-1">Grasa Corporal</p>
-                <p class="text-4xl font-extrabold text-red-400">25.9 <span class="text-lg font-normal text-gray-500">%</span></p>
-                <div class="mt-2 text-xs text-red-400 font-medium">Bajo 4.5% vs Dic</div>
+                <p class="text-gray-400 text-sm font-semibold mb-1">Grasa %</p>
+                <p class="text-3xl font-black text-cyan-400">25.6 <span class="text-lg font-normal text-gray-500">%</span></p>
+                <div class="mt-2 text-xs text-emerald-400 italic">Target: 18%</div>
             </div>
-
-            <div class="glass p-6 rounded-3xl border-cyan-500/30 bg-cyan-500/5">
-                <p class="text-cyan-400 text-sm font-semibold mb-1">TMB</p>
-                <p class="text-4xl font-extrabold text-white">1,540 <span class="text-lg font-normal text-gray-500">kcal</span></p>
-                <div class="mt-2 text-[10px] text-gray-500 uppercase font-bold tracking-widest italic">Metabolismo</div>
+            <div class="glass p-6 rounded-3xl bg-cyan-500/5">
+                <p class="text-cyan-400 text-sm font-semibold mb-1">Puntuación</p>
+                <p class="text-3xl font-black text-white">71 <span class="text-lg font-normal text-gray-500">/100</span></p>
+                <div class="mt-2 text-xs text-gray-500 font-bold uppercase tracking-widest">InBody Score</div>
             </div>
         </section>
 
-        <!-- SELECTOR ÚNICO DE CRONOGRAMA -->
-        <section class="glass p-8 rounded-3xl">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                        📅 Plan de Transformación
-                    </h2>
-                    <p class="text-gray-400 text-sm">Elige tu modalidad para ajustar la proyección.</p>
+        <!-- CARTAS DE CRONOGRAMA -->
+        <section class="glass p-8 rounded-3xl relative overflow-hidden">
+            <!-- Card Atleta -->
+            <div id="cardAtleta" class="plan-card active grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-6">
+                    <div class="flex justify-between items-end">
+                        <span class="text-6xl font-black text-white">16 <span class="text-xl text-cyan-400 font-medium uppercase tracking-widest">Semanas</span></span>
+                        <div class="text-right">
+                            <span class="block text-cyan-400 font-bold">~0.35 kg / sem</span>
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">Déficit Incrementado</span>
+                        </div>
+                    </div>
+                    <div class="relative pt-1">
+                        <div class="flex mb-2 items-center justify-between text-xs font-bold uppercase text-cyan-400">
+                            <span>Esfuerzo Requerido</span>
+                            <span>Acelerado</span>
+                        </div>
+                        <div class="overflow-hidden h-4 flex rounded-full bg-gray-800 p-1">
+                            <div style="width:75%" class="rounded-full bg-gradient-to-r from-cyan-600 to-cyan-400"></div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed border-l-2 border-cyan-500/30 pl-4">
+                        Para llegar en **Junio**, necesitarías duplicar tu ritmo actual. Esto implica un control de dieta más estricto y añadir actividad cardiovascular diaria (NEAT alto).
+                    </p>
                 </div>
-                <div class="flex bg-gray-900/50 p-1.5 rounded-2xl border border-white/5 shadow-inner">
-                    <button id="btnAtleta" onclick="switchPlan('atleta')" class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-cyan-400 text-black shadow-lg shadow-cyan-500/20">Modo Atleta</button>
-                    <button id="btnEstandar" onclick="switchPlan('estandar')" class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">Modo Estándar</button>
+                <div class="bg-cyan-500/5 p-8 rounded-3xl border border-cyan-500/20 flex flex-col justify-center items-center text-center">
+                    <h4 class="text-white/60 font-bold uppercase text-[10px] tracking-widest mb-2">Meta Proyectada</h4>
+                    <p class="text-4xl font-black text-white mb-1">15 JUN</p>
+                    <div class="px-3 py-1 bg-cyan-500/10 rounded-full text-cyan-400 text-[10px] font-bold">TARGET 63kg</div>
                 </div>
             </div>
 
-            <!-- CONTENEDOR DE CARTAS - SOLO UNA ES VISIBLE -->
-            <div id="containerPlanes">
-                
-                <!-- VISTA ATLETA -->
-                <div id="cardAtleta" class="plan-card active grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="md:col-span-2 space-y-6">
-                        <div class="flex justify-between items-end">
-                            <span class="text-6xl font-black text-white">10 <span class="text-xl text-cyan-400 font-medium uppercase tracking-widest">Semanas</span></span>
-                            <div class="text-right">
-                                <span class="block text-cyan-400 font-bold">~0.85 kg / sem</span>
-                                <span class="text-[10px] text-gray-500 uppercase font-bold">Intensidad Alta</span>
-                            </div>
+            <!-- Card Sostenible -->
+            <div id="cardSostenible" class="plan-card grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-6">
+                    <div class="flex justify-between items-end">
+                        <span class="text-6xl font-black text-white">28 <span class="text-xl text-yellow-500 font-medium uppercase tracking-widest">Semanas</span></span>
+                        <div class="text-right">
+                            <span class="block text-yellow-500 font-bold">~0.17 kg / sem</span>
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">Ritmo Real Actual</span>
                         </div>
-                        <div class="relative pt-1">
-                            <div class="flex mb-2 items-center justify-between text-xs font-bold uppercase text-cyan-400">
-                                <span>Progreso Estimado (Rutina MAM)</span>
-                                <span>6 Días / Sem</span>
-                            </div>
-                            <div class="overflow-hidden h-4 flex rounded-full bg-gray-800 p-1">
-                                <div style="width:25%" class="rounded-full bg-gradient-to-r from-cyan-600 to-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.3)]"></div>
-                            </div>
+                    </div>
+                    <div class="relative pt-1">
+                        <div class="flex mb-2 items-center justify-between text-xs font-bold uppercase text-yellow-500">
+                            <span>Esfuerzo Actual</span>
+                            <span>Saludable / Seguro</span>
                         </div>
-                        <p class="text-gray-400 text-sm leading-relaxed border-l-2 border-cyan-500/30 pl-4">
-                            Max, con este ritmo optimizamos la quema de grasa sin tocar el músculo. La meta de 18% se proyecta para finales de marzo.
-                        </p>
+                        <div class="overflow-hidden h-4 flex rounded-full bg-gray-800 p-1">
+                            <div style="width:30%" class="rounded-full bg-yellow-500"></div>
+                        </div>
                     </div>
-                    <div class="bg-cyan-500/5 p-8 rounded-3xl border border-cyan-500/20 flex flex-col justify-center items-center text-center">
-                        <h4 class="text-white/60 font-bold uppercase text-[10px] tracking-widest mb-2">Fecha Meta</h4>
-                        <p class="text-4xl font-black text-white mb-1">28 MAR</p>
-                        <p class="text-cyan-400 font-bold italic text-xs">MODO ATLETA</p>
-                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed border-l-2 border-yellow-500/30 pl-4">
+                        Este es tu ritmo real de las últimas 4 semanas. Es **extremadamente seguro** para tu masa muscular y fácil de mantener socialmente. La meta se sitúa en Septiembre.
+                    </p>
                 </div>
-
-                <!-- VISTA ESTÁNDAR -->
-                <div id="cardEstandar" class="plan-card grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="md:col-span-2 space-y-6">
-                        <div class="flex justify-between items-end">
-                            <span class="text-6xl font-black text-white">14 <span class="text-xl text-gray-500 font-medium uppercase tracking-widest">Semanas</span></span>
-                            <div class="text-right">
-                                <span class="block text-yellow-500 font-bold">~0.60 kg / sem</span>
-                                <span class="text-[10px] text-gray-500 uppercase font-bold">Sostenibilidad</span>
-                            </div>
-                        </div>
-                        <div class="relative pt-1">
-                            <div class="flex mb-2 items-center justify-between text-xs font-bold uppercase text-yellow-500">
-                                <span>Progreso Conservador</span>
-                                <span>3-4 Días / Sem</span>
-                            </div>
-                            <div class="overflow-hidden h-4 flex rounded-full bg-gray-800 p-1">
-                                <div style="width:18%" class="rounded-full bg-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]"></div>
-                            </div>
-                        </div>
-                        <p class="text-gray-400 text-sm leading-relaxed border-l-2 border-yellow-500/30 pl-4">
-                            Ritmo más flexible, ideal para periodos de descanso o alta carga externa, asegurando resultados a largo plazo.
-                        </p>
-                    </div>
-                    <div class="bg-yellow-500/5 p-8 rounded-3xl border border-yellow-500/20 flex flex-col justify-center items-center text-center">
-                        <h4 class="text-white/60 font-bold uppercase text-[10px] tracking-widest mb-2">Fecha Meta</h4>
-                        <p class="text-4xl font-black text-white mb-1">25 ABR</p>
-                        <p class="text-yellow-500 font-bold italic text-xs">MODO ESTÁNDAR</p>
-                    </div>
+                <div class="bg-yellow-500/5 p-8 rounded-3xl border border-yellow-500/20 flex flex-col justify-center items-center text-center">
+                    <h4 class="text-white/60 font-bold uppercase text-[10px] tracking-widest mb-2">Meta Proyectada</h4>
+                    <p class="text-4xl font-black text-white mb-1">10 SEP</p>
+                    <div class="px-3 py-1 bg-yellow-500/10 rounded-full text-yellow-500 text-[10px] font-bold">TARGET 63kg</div>
                 </div>
-
             </div>
         </section>
 
-        <!-- GRÁFICOS -->
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="glass p-8 rounded-3xl">
-                <h3 class="text-xl font-bold text-white mb-6">Historial Evolutivo</h3>
+        <!-- GRÁFICO COMPARATIVO -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 glass p-8 rounded-3xl">
+                <h3 class="text-xl font-bold text-white mb-6">Proyección de Peso (63kg Target)</h3>
                 <div class="chart-container">
-                    <canvas id="historicalChart"></canvas>
+                    <canvas id="projectionChart"></canvas>
                 </div>
             </div>
 
-            <div class="glass p-8 rounded-3xl">
-                <h3 class="text-xl font-bold text-white mb-6">Balance Muscular (100% = Ideal)</h3>
-                <div class="chart-container">
-                    <canvas id="muscleSegmentalChart"></canvas>
+            <!-- RECORDATORIO DIETA -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold text-white px-2">Estrategia Nutricional</h3>
+                <div class="glass p-5 rounded-2xl border-l-4 border-cyan-500">
+                    <p class="text-white text-xs font-bold uppercase">Entrenamiento</p>
+                    <p class="text-[11px] text-gray-400 mt-1">Priorizar Pierna (87% MME). Rutina MAM 6/7 días activa.</p>
+                </div>
+                <div class="glass p-5 rounded-2xl border-l-4 border-emerald-500">
+                    <p class="text-white text-xs font-bold uppercase">Clave Dieta</p>
+                    <p class="text-[11px] text-gray-400 mt-1">150g proteína/día + Carbohidratos complejos antes de entrenar.</p>
+                </div>
+                <div class="glass p-5 rounded-2xl border-l-4 border-purple-500">
+                    <p class="text-white text-xs font-bold uppercase">Suplementación</p>
+                    <p class="text-[11px] text-gray-400 mt-1">Whey Isolate post-gym + Creatina 5g diaria.</p>
                 </div>
             </div>
         </section>
@@ -216,40 +185,58 @@
     </main>
 
     <script>
+        let chart;
         function switchPlan(type) {
             const btnAtleta = document.getElementById('btnAtleta');
-            const btnEstandar = document.getElementById('btnEstandar');
+            const btnSostenible = document.getElementById('btnSostenible');
             const cardAtleta = document.getElementById('cardAtleta');
-            const cardEstandar = document.getElementById('cardEstandar');
+            const cardSostenible = document.getElementById('cardSostenible');
 
             if(type === 'atleta') {
-                // Estilos Botones
                 btnAtleta.className = 'px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-cyan-400 text-black shadow-lg shadow-cyan-500/20';
-                btnEstandar.className = 'px-6 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white';
-                
-                // Visibilidad Cartas
+                btnSostenible.className = 'px-6 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white';
                 cardAtleta.classList.add('active');
-                cardEstandar.classList.remove('active');
+                cardSostenible.classList.remove('active');
+                updateChart(0);
             } else {
-                // Estilos Botones
-                btnEstandar.className = 'px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-yellow-500 text-black shadow-lg shadow-yellow-500/20';
+                btnSostenible.className = 'px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-yellow-500 text-black shadow-lg shadow-yellow-500/20';
                 btnAtleta.className = 'px-6 py-2.5 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white';
-                
-                // Visibilidad Cartas
-                cardEstandar.classList.add('active');
+                cardSostenible.classList.add('active');
                 cardAtleta.classList.remove('active');
+                updateChart(1);
             }
         }
 
-        function initCharts() {
-            const ctxHist = document.getElementById('historicalChart').getContext('2d');
-            new Chart(ctxHist, {
+        function updateChart(viewIndex) {
+            chart.data.datasets.forEach((ds, i) => {
+                ds.hidden = (i !== viewIndex);
+            });
+            chart.update();
+        }
+
+        window.onload = function() {
+            const ctx = document.getElementById('projectionChart').getContext('2d');
+            chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['SEP 21', 'FEB 25', 'MAY 25', 'OCT 25', 'DIC 25', 'ENE 26'],
+                    labels: ['Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep'],
                     datasets: [
-                        { label: 'MME (kg)', data: [27.9, 28.7, 28.5, 28.6, 28.6, 28.6], borderColor: '#a3e635', borderWidth: 3, tension: 0.4 },
-                        { label: 'Peso (kg)', data: [66.1, 69.4, 67.4, 67.5, 67.3, 68.2], borderColor: '#22d3ee', borderWidth: 2, borderDash: [5, 5], tension: 0.4 }
+                        { 
+                            label: 'Ruta Atleta', 
+                            data: [67.5, 66.1, 64.7, 63.3, 62.5, null, null, null], 
+                            borderColor: '#22d3ee', 
+                            borderWidth: 4, 
+                            hidden: false,
+                            tension: 0.3 
+                        },
+                        { 
+                            label: 'Ruta Sostenible', 
+                            data: [67.5, 66.8, 66.1, 65.4, 64.7, 64.0, 63.3, 62.5], 
+                            borderColor: '#fbbf24', 
+                            borderWidth: 4, 
+                            hidden: true,
+                            tension: 0.3 
+                        }
                     ]
                 },
                 options: {
@@ -257,41 +244,16 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { grid: { color: '#232830' }, ticks: { color: '#64748b' } },
+                        y: { 
+                            min: 60,
+                            grid: { color: '#232830' }, 
+                            ticks: { color: '#64748b' } 
+                        },
                         x: { grid: { display: false }, ticks: { color: '#64748b' } }
                     }
                 }
             });
-
-            const ctxSeg = document.getElementById('muscleSegmentalChart').getContext('2d');
-            new Chart(ctxSeg, {
-                type: 'bar',
-                data: {
-                    labels: ['Brazo D', 'Brazo I', 'Tronco', 'Pierna D', 'Pierna I'],
-                    datasets: [{
-                        data: [108.6, 106.0, 104.3, 86.1, 87.7],
-                        backgroundColor: (ctx) => ctx.raw < 100 ? '#f43f5e' : '#10b981',
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { display: false },
-                        annotation: { annotations: { line100: { type: 'line', xMin: 100, xMax: 100, borderColor: 'white', borderDash: [4, 4], borderWidth: 1 } } }
-                    },
-                    scales: {
-                        x: { min: 60, max: 120, grid: { color: '#232830' }, ticks: { color: '#64748b' } },
-                        y: { ticks: { color: '#e2e8f0', font: { weight: '600' } } }
-                    }
-                }
-            });
-        }
-
-        window.onload = initCharts;
+        };
     </script>
 </body>
 </html>
-
